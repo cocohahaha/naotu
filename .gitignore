@@ -1,0 +1,40 @@
+node_modules/
+dist/
+dist-cli/
+src-tauri/target/
+src-tauri/gen/
+.DS_Store
+
+# deps / build outputs
+node_modules/
+dist/
+build/
+target/
+coverage/
+.wrangler/
+# OS / editor
+.DS_Store
+*.log
+# env / secrets
+.env
+.env.*
+*.p8
+*.pem
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcuserstate
+*.xcarchive
+Pods/
+# archives / bundles
+*.zip
+*.dmg
+*.app
+*.ipa
+*.crx
+# Tauri generated
+src-tauri/target/
+src-tauri/gen/
+
+# 本机专用的 Cargo 配置
+/.cargo/

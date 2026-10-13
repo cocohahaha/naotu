@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- 声明中文本地化：系统提供的界面（存储面板、按钮、系统追加的菜单项）才会显示中文 -->
+  <key>CFBundleDevelopmentRegion</key>
+  <string>zh_CN</string>
+  <key>CFBundleLocalizations</key>
+  <array>
+    <string>zh_CN</string>
+    <string>en</string>
+  </array>
+  <key>NSDocumentsFolderUsageDescription</key>
+  <string>Naotu 需要读写你放在「文稿」里的 .xmind 文件。</string>
+  <key>NSDesktopFolderUsageDescription</key>
+  <string>Naotu 需要读写你放在「桌面」上的 .xmind 文件。</string>
+  <key>NSDownloadsFolderUsageDescription</key>
+  <string>Naotu 需要读写你放在「下载」里的 .xmind 文件。</string>
+</dict>
+</plist>

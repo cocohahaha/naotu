@@ -1,0 +1,528 @@
+:root {
+  --bg: #fafaf9;
+  --panel: #ffffff;
+  --ink: #24292f;
+  --text: #2f343a;
+  --muted: #8b949e;
+  --faint: #c9ced4;
+  --line: #cdd3d9;
+  --main-bg: #eef0f2;
+  --hover: #f1f2f4;
+  --accent: #6e8da8;
+  --accent-soft: rgba(110, 141, 168, 0.16);
+  --danger: #b5544c;
+  --font: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Helvetica Neue', sans-serif;
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: default;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ---------- 顶栏：留出红绿灯位置，整条可拖动窗口 ---------- */
+
+.topbar {
+  position: relative;
+  height: 38px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid transparent;
+}
+
+.topbar .title {
+  font-size: 12px;
+  color: var(--muted);
+  max-width: 50%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.topbar .dirty {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--faint);
+}
+
+.topbar .actions {
+  position: absolute;
+  right: 12px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.topbar .actions button,
+.bottombar button {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 3px 9px;
+  border-radius: 5px;
+}
+
+.topbar .actions button:hover,
+.bottombar button:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+
+.topbar .actions button.on {
+  color: var(--ink);
+  background: var(--main-bg);
+}
+
+/* ---------- 画布 ---------- */
+
+.main {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.canvas {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  cursor: default;
+  touch-action: none;
+}
+
+.canvas.dragging {
+  cursor: grabbing;
+}
+
+.canvas svg {
+  display: block;
+}
+
+.edge {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 1.4;
+}
+
+.edge.e1 {
+  stroke-width: 2;
+}
+
+.node .body {
+  fill: transparent;
+}
+
+.node.d0 .body {
+  fill: var(--ink);
+}
+
+.node.d0 .label-text {
+  fill: #fff;
+}
+
+.node.d1 .body {
+  fill: var(--main-bg);
+}
+
+.node .label-text {
+  fill: var(--text);
+}
+
+.node.d2:hover .body {
+  fill: var(--hover);
+}
+
+.node.d1:hover .body {
+  fill: #e6e9ec;
+}
+
+.node .labels {
+  fill: var(--muted);
+}
+
+.node.d0 .labels {
+  fill: #aab3bd;
+}
+
+.node .icon {
+  fill: var(--muted);
+  stroke: var(--muted);
+  stroke-width: 1.1;
+}
+
+.node .icon text,
+.node text.icon {
+  stroke: none;
+}
+
+.node .sel {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+
+.node.drop .sel,
+.node.drop .body {
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+
+.node .flash {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 1;
+  animation: flash 1.8s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.toggle circle {
+  fill: var(--bg);
+  stroke: var(--faint);
+  stroke-width: 1.2;
+}
+
+.toggle path {
+  stroke: var(--muted);
+  stroke-width: 1.4;
+}
+
+.toggle text {
+  fill: var(--muted);
+}
+
+.toggle:not(.folded) {
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+
+.node:hover .toggle,
+.node.selected .toggle {
+  opacity: 1;
+}
+
+.toggle:hover circle {
+  stroke: var(--accent);
+}
+
+.ghost {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.ghost rect {
+  fill: var(--panel);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.ghost text {
+  fill: var(--text);
+}
+
+.editor {
+  position: absolute;
+  transform-origin: 0 0;
+  margin: 0;
+  border: 0;
+  outline: 2px solid var(--accent);
+  outline-offset: 1.5px;
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text);
+  background: var(--panel);
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.editor.d0 {
+  background: var(--ink);
+  color: #fff;
+  caret-color: #fff;
+}
+
+.editor.d1 {
+  background: var(--main-bg);
+}
+
+/* ---------- 欢迎页 ---------- */
+
+.welcome {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 6vh;
+}
+
+.welcome-inner {
+  width: 360px;
+}
+
+.welcome h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.welcome .sub {
+  margin: 2px 0 22px;
+  color: var(--muted);
+}
+
+.welcome-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.welcome-actions button {
+  flex: 1;
+  height: 34px;
+  border-radius: 7px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.welcome-actions button.primary {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: #fff;
+}
+
+.welcome-actions button:disabled {
+  opacity: 0.4;
+}
+
+.welcome kbd {
+  font: 11px var(--font);
+  opacity: 0.55;
+}
+
+.recent {
+  list-style: none;
+  margin: 22px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--main-bg);
+}
+
+.recent button {
+  width: 100%;
+  text-align: left;
+  padding: 8px 6px;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.recent button:hover {
+  background: var(--hover);
+}
+
+.recent .name {
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent .dir {
+  color: var(--muted);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  direction: rtl;
+  max-width: 55%;
+}
+
+.welcome .hint {
+  margin-top: 28px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.welcome code {
+  font: 11px ui-monospace, Menlo, monospace;
+  color: var(--text);
+}
+
+/* ---------- 备注 ---------- */
+
+.notes {
+  width: 300px;
+  flex: none;
+  border-left: 1px solid var(--main-bg);
+  background: var(--panel);
+  display: flex;
+  flex-direction: column;
+  padding: 10px 14px 14px;
+}
+
+.notes-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.notes-head button {
+  font-size: 16px;
+  line-height: 1;
+  color: var(--muted);
+  padding: 2px 4px;
+}
+
+.notes-topic {
+  margin: 10px 0 8px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.notes textarea {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  resize: none;
+  font: 13px/1.7 var(--font);
+  color: var(--text);
+  background: transparent;
+  padding: 0;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.notes-empty {
+  margin-top: 12px;
+  color: var(--muted);
+}
+
+/* ---------- 底栏 ---------- */
+
+.bottombar {
+  height: 32px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  border-top: 1px solid var(--main-bg);
+}
+
+.sheets {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.sheets button.on {
+  color: var(--ink);
+  background: var(--main-bg);
+}
+
+.sheets .add {
+  font-size: 14px;
+  padding: 0 8px;
+}
+
+.sheet-input {
+  font: 12px var(--font);
+  width: 110px;
+  padding: 2px 8px;
+  border: 0;
+  outline: 2px solid var(--accent);
+  border-radius: 5px;
+}
+
+.zoom {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 提示 ---------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 48px;
+  transform: translate(-50%, 6px);
+  padding: 6px 12px;
+  border-radius: 7px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.18s,
+    transform 0.18s;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.toast.agent {
+  background: var(--accent);
+}
+
+.toast.error {
+  background: var(--danger);
+}
