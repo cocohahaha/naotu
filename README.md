@@ -1,6 +1,14 @@
 # Naotu
 
-本地脑图应用。直接读写标准 `.xmind` 文件，和 XMind、官方 xmind CLI 互通；AI agent 可以通过 `naotu` 命令或 MCP 实时操控窗口里的脑图。不联网，没有账号和云服务。
+**本地脑图应用，直接读写 `.xmind`，AI agent 可以通过命令行或 MCP 实时操控。**
+
+A local mind-map app for Mac. It reads and writes `.xmind` files directly, and AI agents can edit the open map live through a CLI or MCP.
+
+![Naotu：打开一份学习笔记脑图，右侧是选中主题的备注](docs/screenshot.webp)
+
+- **标准 `.xmind`**：和 XMind、官方 xmind CLI 互通，界面不显示的字段（样式、关系线、概要等）保存时原样保留。
+- **agent 实时协作**：`naotu` 命令或 MCP 改动会实时出现在窗口里，带高亮提示，可以 ⌘Z 撤销。
+- **只在本机**：不联网，没有账号和云服务；agent 桥只监听 127.0.0.1。
 
 技术栈：Tauri 2（Rust 外壳）+ React 19 + TypeScript，脑图用 SVG 自绘。
 
